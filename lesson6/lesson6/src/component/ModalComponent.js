@@ -17,6 +17,7 @@ function ModalComponent(props) {
     })
     useEffect(() => {
         setFormData(dataEdit)
+        console.log(dataEdit.createDate);
     }, [dataEdit])
     const handleForm = () => {
         handleFormDataToParent(formData)
@@ -136,7 +137,7 @@ function ModalComponent(props) {
                             id="createDate"
                             name="createDate"
                             type="date"
-                            value={formData.createDate}
+                            value={moment(formData.createDate).format("YYYY-MM-DD")}
                             onChange={handleChange}
 
                         />

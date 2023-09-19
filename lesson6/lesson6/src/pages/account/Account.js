@@ -51,6 +51,7 @@ function Account(props) {
     }
     const handleFormData = (formData) => {
         console.log('tesst123', formData);
+
     }
     return (
         <div className="container">

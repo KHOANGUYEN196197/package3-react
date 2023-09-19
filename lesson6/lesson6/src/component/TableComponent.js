@@ -29,7 +29,7 @@ function TableComponent(props) {
                             <td>{account.fullName}</td>
                             <td>{account.department}</td>
                             <td>{account.position}</td>
-                            <td> {moment(account.createDate).format("YYYY/DD/MM")}</td>
+                            <td> {moment(account.createDate).format("YYYY-MM-DD")}</td>
                             <td><ButtonComponent clickButton={() => { handleEditClickToParent(account) }} color="warning" name="edit" /></td>
                             <td><ButtonComponent clickButton={() => { handleDeleteClickToParent(account.id) }} color="warning" name="delete" /></td>
                         </tr>
