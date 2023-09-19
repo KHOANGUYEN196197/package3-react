@@ -1,7 +1,9 @@
 import { Table } from "reactstrap"
 import ButtonComponent from "./ButtonComponent"
+import moment from "moment";
 
-function TableComponent() {
+function TableComponent(props) {
+    const { handleEditClickToParent, handleDeleteClickToParent, accounts, departments, positions } = props;
     return (
         <Table striped>
             <thead>
@@ -18,38 +20,22 @@ function TableComponent() {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Email</td>
-                    <td>Username</td>
-                    <td>FullName</td>
-                    <td>Department</td>
-                    <td>Position</td>
-                    <td>Create Date</td>
-                    <td><ButtonComponent color="warning" name="edit" /></td>
-                    <td><ButtonComponent color="warning" name="delete" /></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Email</td>
-                    <td>Username</td>
-                    <td>FullName</td>
-                    <td>Department</td>
-                    <td>Position</td>
-                    <td>Create Date</td>
-                    <td><ButtonComponent color="warning" name="edit" /></td>
-                    <td><ButtonComponent color="warning" name="delete" /></td>
-                </tr>   <tr>
-                    <td>1</td>
-                    <td>Email</td>
-                    <td>Username</td>
-                    <td>FullName</td>
-                    <td>Department</td>
-                    <td>Position</td>
-                    <td>Create Date</td>
-                    <td><ButtonComponent color="warning" name="edit" /></td>
-                    <td><ButtonComponent color="warning" name="delete" /></td>
-                </tr>
+                {accounts.map((account) => {
+                    return (
+                        <tr key={account.id}>
+                            <td>{account.id}</td>
+                            <td>{account.email}</td>
+                            <td>{account.userName}</td>
+                            <td>{account.fullName}</td>
+                            <td>{account.department}</td>
+                            <td>{account.position}</td>
+                            <td> {moment(account.createDate).format("YYYY/DD/MM")}</td>
+                            <td><ButtonComponent clickButton={() => { handleEditClickToParent(account) }} color="warning" name="edit" /></td>
+                            <td><ButtonComponent clickButton={() => { handleDeleteClickToParent(account.id) }} color="warning" name="delete" /></td>
+                        </tr>
+                    )
+                })}
+
             </tbody>
         </Table>
     )

@@ -1,13 +1,11 @@
 import { Button } from "reactstrap";
 
 function ButtonComponent(props) {
-    const { name, color } = props;
+    const { name, color, clickButton } = props;
     return (
-        <>
-            <Button color={color}>
-                {name}
-            </Button>
-        </>
+        <Button onClick={clickButton} color={color}>
+            {name}
+        </Button>
     )
 }
 export default ButtonComponent;
