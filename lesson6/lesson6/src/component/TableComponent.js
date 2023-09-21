@@ -1,18 +1,9 @@
 import { Table } from "reactstrap"
 import ButtonComponent from "./ButtonComponent"
 import moment from "moment";
-import Pagination from "./Pagination";
-import { useEffect, useMemo, useState } from "react";
 
 function TableComponent(props) {
     const { handleEditClickToParent, handleDeleteClickToParent, accounts, departments, positions } = props;
-    let PageSize = 10;
-    const [currentPage, setCurrentPage] = useState(1);
-    const currentTableData = useMemo(() => {
-        const firstPageIndex = (currentPage - 1) * PageSize;
-        const lastPageIndex = firstPageIndex + PageSize;
-        return accounts.slice(firstPageIndex, lastPageIndex);
-    }, [currentPage, accounts]);
     return (
         <>
             <Table striped>
@@ -30,7 +21,7 @@ function TableComponent(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentTableData && currentTableData.map((account) => {
+                    {accounts && accounts.map((account) => {
                         return (
                             <tr key={account.id}>
                                 <td>{account.id}</td>
@@ -47,13 +38,6 @@ function TableComponent(props) {
                     })}
                 </tbody>
             </Table>
-            <Pagination
-                className="pagination-bar"
-                currentPage={currentPage}
-                totalCount={accounts.length}
-                pageSize={PageSize}
-                onPageChange={page => setCurrentPage(page)}
-            />
         </>)
 }
 export default TableComponent
