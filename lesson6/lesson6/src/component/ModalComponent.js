@@ -2,6 +2,8 @@ import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, M
 import ButtonComponent from "./ButtonComponent";
 import { useEffect, useState } from "react";
 import moment, { months } from "moment";
+import InputField from "./InputFiled";
+import SelectField from "./SelectField";
 
 function ModalComponent(props) {
     const defaultTitle = 'Create new Account!!!!!'
@@ -19,8 +21,8 @@ function ModalComponent(props) {
         setFormData(dataEdit)
         console.log(dataEdit.createDate);
     }, [dataEdit])
-    const handleForm = () => {
-        handleFormDataToParent(formData)
+    const handleForm = (typeModal) => {
+        handleFormDataToParent(formData, typeModal)
     }
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -36,32 +38,24 @@ function ModalComponent(props) {
             <ModalBody>
 
                 <Form>
-                    <FormGroup>
-                        <Label for="id">
-                            ID
-                        </Label>
-                        <Input
-                            id="id"
-                            name="id"
-                            placeholder="ID Input"
-                            value={formData.id}
-                            type="text"
-                            onChange={handleChange}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="email">
-                            Email
-                        </Label>
-                        <Input
-                            id="email"
-                            name="email"
-                            placeholder="Email Input"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </FormGroup>
+                    <InputField
+                        id="id"
+                        label="ID"
+                        placeholder="ID Input"
+                        value={formData.id}
+                        type="text"
+                        onChange={handleChange}
+                    />
+
+                    <InputField
+                        id="email"
+                        label="Email"
+                        placeholder="Email Input"
+                        value={formData.email}
+                        type="email"
+                        onChange={handleChange}
+                    />
+
                     <FormGroup>
                         <Label for="username">
                             Username
@@ -89,46 +83,25 @@ function ModalComponent(props) {
 
                         />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="department">
-                            Department
-                        </Label>
-                        <Input
-                            id="department"
-                            name="department"
-                            type="select"
-                            value={formData.department}
-                            onChange={handleChange}
 
-                        >
-                            <option value="">Select Department</option>
-                            {departments.map((department) => {
-                                return (
-                                    <option key={department.id} value={department.id}>{department.value}</option>
-                                )
-                            })}
-                        </Input>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="position">
-                            Position
-                        </Label>
-                        <Input
-                            id="position"
-                            name="position"
-                            type="select"
-                            value={formData.position}
-                            onChange={handleChange}
+                    <SelectField
+                        id="department"
+                        label="Department"
+                        value={formData.department}
+                        type="select"
+                        onChange={handleChange}
+                        listOption={departments}
+                    />
 
-                        >
-                            <option value="">Select Position</option>
-                            {positions.map((position) => {
-                                return (
-                                    <option key={position.id} value={position.id}>{position.value}</option>
-                                )
-                            })}
-                        </Input>
-                    </FormGroup>
+                    <SelectField
+                        id="position"
+                        label="Position"
+                        value={formData.position}
+                        type="select"
+                        onChange={handleChange}
+                        listOption={positions}
+                    />
+
                     <FormGroup>
                         <Label for="createDate">
                             Create Date
@@ -145,7 +118,7 @@ function ModalComponent(props) {
                 </Form>
             </ModalBody>
             <ModalFooter>
-                <ButtonComponent clickButton={handleForm} color="primary" name={title === defaultTitle ? 'create' : 'edit'} />
+                <ButtonComponent clickButton={() => { handleForm(title === defaultTitle ? 'create' : 'edit') }} color="primary" name={title === defaultTitle ? 'create' : 'edit'} />
                 <ButtonComponent clickButton={close} color="danger" name="Close" />
             </ModalFooter>
         </Modal>

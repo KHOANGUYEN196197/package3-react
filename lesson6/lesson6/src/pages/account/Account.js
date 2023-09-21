@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonComponent from "../../component/ButtonComponent";
 import TableComponent from "../../component/TableComponent";
 import "./style.scss"
@@ -11,7 +11,17 @@ import swal from "sweetalert";
 function Account(props) {
     const [modal, setModal] = useState(false);
     const [title, setTitle] = useState("");
-    const [dataEdit, setDataEdit] = useState({})
+    const [dataEdit, setDataEdit] = useState({});
+    const [accounts, setAccounts] = useState([])
+    const [departments, setDepartments] = useState([])
+    const [positions, setPositions] = useState([])
+
+
+    useEffect(() => {
+        setAccounts(ACCOUNT);
+        setDepartments(DEPARTMENT);
+        setPositions(POSITION);
+    }, [])
 
     const create = () => {
         setModal(!modal);
@@ -31,26 +41,32 @@ function Account(props) {
         setTitle("Update Account!!!!!")
         setDataEdit(account)
     }
-    const handleDelete = (id) => {
+    const handleDelete = (accountDel) => {
         swal({
             title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary file!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    swal("Poof! Your imaginary file has been deleted!", {
+                    const newAccounts = accounts.filter((account => +account.id !== +accountDel.id));
+                    setAccounts(newAccounts)
+                    swal(`deleted ${accountDel.fullName} success`, {
                         icon: "success",
                     });
-                } else {
-                    swal("Your imaginary file is safe!");
                 }
             });
     }
-    const handleFormData = (formData) => {
-        console.log('tesst123', formData);
+    const handleFormData = (formData, typeModal) => {
+        if (typeModal === 'create') {
+            accounts.push(formData);
+            setModal(!modal)
+        } else {
+            const index = accounts.findIndex((account) => account.id === formData.id);
+            accounts[index] = formData;
+            setModal(!modal)
+        }
 
     }
     return (
@@ -64,16 +80,16 @@ function Account(props) {
             </div>
             <h1>Danh sách Account</h1>
             <TableComponent
-                accounts={ACCOUNT}
-                departments={DEPARTMENT}
-                positions={POSITION}
+                accounts={accounts}
+                departments={departments}
+                positions={positions}
                 handleEditClickToParent={handleEdit}
                 handleDeleteClickToParent={handleDelete}
             />
             <ModalComponent
-                accounts={ACCOUNT}
-                departments={DEPARTMENT}
-                positions={POSITION}
+                accounts={accounts}
+                departments={departments}
+                positions={positions}
                 dataEdit={dataEdit}
                 title={title}
                 isOpen={modal}
