@@ -12,10 +12,12 @@ import Pagination from "../../component/Pagination";
 function Account(props) {
     const [modal, setModal] = useState(false);
     const [title, setTitle] = useState("");
-    const [dataEdit, setDataEdit] = useState({});
+    const [dataEdits, setDataEdits] = useState([]);
     const [accounts, setAccounts] = useState([])
     const [departments, setDepartments] = useState([])
     const [positions, setPositions] = useState([])
+    const [dataAccountSelected, setDataAccountSelected] = useState([]);
+    const [isCheckChangePagi, setIsCheckChangePagi] = useState(false);
     let PageSize = 10;
 
 
@@ -24,6 +26,10 @@ function Account(props) {
         setDepartments(DEPARTMENT);
         setPositions(POSITION);
     }, [])
+
+    const handleSelectAccounts = (accounts) => {
+        setDataAccountSelected(accounts)
+    };
 
     const [currentPage, setCurrentPage] = useState(1);
     const currentTableData = useMemo(() => {
@@ -35,7 +41,7 @@ function Account(props) {
     const create = () => {
         setModal(!modal);
         setTitle("Create new Account!!!!!")
-        setDataEdit({
+        setDataEdits([{
             id: '',
             email: '',
             userName: '',
@@ -43,12 +49,12 @@ function Account(props) {
             department: '',
             position: '',
             createDate: ''
-        })
+        }])
     };
     const handleEdit = (account) => {
-        setModal(!modal);
+        setDataEdits([account])
         setTitle("Update Account!!!!!")
-        setDataEdit(account)
+        setModal(!modal);
     }
     const handleDelete = (accountDel) => {
         swal({
@@ -78,6 +84,33 @@ function Account(props) {
         }
 
     }
+    const editSelectAccount = () => {
+        setModal(!modal);
+        setTitle("Update Account!!!!!");
+        setDataEdits(dataAccountSelected);
+    }
+    const deleteSelectAccount = () => {
+        swal({
+            title: `Are you sure deleted ${dataAccountSelected.length} Account`,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    const newAccounts = accounts.filter((account => !dataAccountSelected.includes(account.id)));
+                    setAccounts(newAccounts)
+                    swal(`deleted ${dataAccountSelected.length} success`, {
+                        icon: "success",
+                    });
+                }
+            });
+
+    }
+    const changePagination = (page) => {
+        setIsCheckChangePagi(!isCheckChangePagi)
+        setCurrentPage(page);
+    }
     return (
         <div className="container">
             <div className="box-button">
@@ -85,28 +118,44 @@ function Account(props) {
                     clickButton={create}
                     color="primary"
                     name="Create New Account"
-                />
+                /> &nbsp;&nbsp;
+                {dataAccountSelected.length > 0 && <>
+                    <ButtonComponent
+                        clickButton={editSelectAccount}
+                        color="warning"
+                        name="Edit Account"
+                    />&nbsp;&nbsp;
+                    <ButtonComponent
+                        clickButton={deleteSelectAccount}
+                        color="danger"
+                        name="Delete Account"
+                    />
+                </>}
+
+
             </div>
             <h1>Danh sách Account</h1>
             <TableComponent
                 accounts={currentTableData}
                 departments={departments}
                 positions={positions}
+                isCheckChangePagi={isCheckChangePagi}
                 handleEditClickToParent={handleEdit}
                 handleDeleteClickToParent={handleDelete}
+                selectAccountsToParent={handleSelectAccounts}
             />
             <Pagination
                 className="pagination-bar"
                 currentPage={currentPage}
                 totalCount={accounts.length}
                 pageSize={PageSize}
-                onPageChange={page => setCurrentPage(page)}
+                onPageChange={page => changePagination(page)}
             />
             <ModalComponent
                 accounts={accounts}
                 departments={departments}
                 positions={positions}
-                dataEdit={dataEdit}
+                dataEdits={dataEdits}
                 title={title}
                 isOpen={modal}
                 toggle={create}
