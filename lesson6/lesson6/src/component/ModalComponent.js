@@ -1,113 +1,124 @@
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
 import ButtonComponent from "./ButtonComponent";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import moment, { months } from "moment";
 import InputField from "./InputFiled";
 import SelectField from "./SelectField";
 
 function ModalComponent(props) {
     const defaultTitle = 'Create new Account!!!!!'
-    const { modal, toggle, title, close, dataEdits, departments, positions, handleFormDataToParent } = props;
-    const [formDatas, setFormDatas] = useState([])
+    const { modal, toggle, title, close, dataEdit, departments, positions, handleFormDataToParent } = props;
+    const [formData, setFormData] = useState({
+        id: '',
+        email: '',
+        userName: '',
+        fullName: '',
+        department: '',
+        position: '',
+        createDate: ''
+    })
     useEffect(() => {
-        setFormDatas(dataEdits);
-    }, [toggle])
-
-
-
+        setFormData(dataEdit)
+        console.log(dataEdit.createDate);
+    }, [dataEdit])
     const handleForm = (typeModal) => {
-        handleFormDataToParent(formDatas, typeModal)
+        handleFormDataToParent(formData, typeModal)
     }
-    const handleChange = (e, index) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
-        const updateFormDatas = [...formDatas];
-        const formDataUpdate = updateFormDatas[index];
-        formDataUpdate[name] = value;
-        setFormDatas(updateFormDatas)
+        setFormData({
+            ...formData,
+            [name]: value,
+        })
 
     }
     return (
         <Modal isOpen={modal} toggle={toggle} {...props}>
             <ModalHeader toggle={toggle}>{title}</ModalHeader>
             <ModalBody>
-                {formDatas && formDatas.length > 0 && formDatas.map((formData, index) => {
-                    return (
-                        <React.Fragment key={index}>
-                            <Label style={{ color: 'red' }}>Form Account No {index + 1}</Label>
-                            <br />
-                            <Form>
-                                {title === defaultTitle ? <InputField
-                                    id="id"
-                                    label="ID"
-                                    placeholder="ID Input"
-                                    value={formData.id}
-                                    type="text"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                /> : null}
 
-                                <InputField
-                                    id="email"
-                                    label="Email"
-                                    placeholder="Email Input"
-                                    value={formData.email}
-                                    type="email"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                />
+                <Form>
+                    <InputField
+                        id="id"
+                        label="ID"
+                        placeholder="ID Input"
+                        value={formData.id}
+                        type="text"
+                        onChange={handleChange}
+                    />
 
-                                <InputField
-                                    id="username"
-                                    label="Username"
-                                    placeholder="Username Input"
-                                    value={formData.username}
-                                    type="text"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                />
+                    <InputField
+                        id="email"
+                        label="Email"
+                        placeholder="Email Input"
+                        value={formData.email}
+                        type="email"
+                        onChange={handleChange}
+                    />
 
-                                <InputField
-                                    id="fullName"
-                                    label="FullName"
-                                    placeholder="FullName Input"
-                                    value={formData.fullName}
-                                    type="text"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                />
+                    <FormGroup>
+                        <Label for="username">
+                            Username
+                        </Label>
+                        <Input
+                            id="username"
+                            name="userName"
+                            placeholder="Username Input"
+                            type="text"
+                            value={formData.userName}
+                            onChange={handleChange}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="fullName">
+                            FullName
+                        </Label>
+                        <Input
+                            id="fullName"
+                            name="fullName"
+                            placeholder="FullName Input"
+                            type="text"
+                            value={formData.fullName}
+                            onChange={handleChange}
 
+                        />
+                    </FormGroup>
 
-                                <SelectField
-                                    id="department"
-                                    label="Department"
-                                    value={formData.department}
-                                    type="select"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                    listOption={departments}
-                                />
+                    <SelectField
+                        id="department"
+                        label="Department"
+                        value={formData.department}
+                        type="select"
+                        onChange={handleChange}
+                        listOption={departments}
+                    />
 
-                                <SelectField
-                                    id="position"
-                                    label="Position"
-                                    value={formData.position}
-                                    type="select"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                    listOption={positions}
-                                />
+                    <SelectField
+                        id="position"
+                        label="Position"
+                        value={formData.position}
+                        type="select"
+                        onChange={handleChange}
+                        listOption={positions}
+                    />
 
-                                <InputField
-                                    id="createDate"
-                                    label="CreateDate"
-                                    placeholder="CreateDate Input"
-                                    value={moment(formData.createDate).format("YYYY-MM-DD")}
-                                    type="date"
-                                    onChange={(e) => { handleChange(e, index) }}
-                                />
+                    <FormGroup>
+                        <Label for="createDate">
+                            Create Date
+                        </Label>
+                        <Input
+                            id="createDate"
+                            name="createDate"
+                            type="date"
+                            value={moment(formData.createDate).format("YYYY-MM-DD")}
+                            onChange={handleChange}
 
-
-                            </Form>
-                        </React.Fragment>
-                    )
-                })}
+                        />
+                    </FormGroup>
+                </Form>
             </ModalBody>
             <ModalFooter>
-                <ButtonComponent clickButton={() => { handleForm(title === defaultTitle ? 'create' : 'edit') }} color={title === defaultTitle ? 'primary' : 'warning'} name={title === defaultTitle ? 'create' : 'edit'} />
+                <ButtonComponent clickButton={() => { handleForm(title === defaultTitle ? 'create' : 'edit') }} color="primary" name={title === defaultTitle ? 'create' : 'edit'} />
                 <ButtonComponent clickButton={close} color="danger" name="Close" />
             </ModalFooter>
         </Modal>
